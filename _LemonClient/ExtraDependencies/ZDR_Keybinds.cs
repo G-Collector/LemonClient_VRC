@@ -85,7 +85,6 @@ namespace _LemonClient.ExtraDependencies
 				Networking.LocalPlayer.SetVelocity(Vector3.zero);
 				yield return null;
 			}
-			yield break;
 		}
 
 		public static void Initialize()

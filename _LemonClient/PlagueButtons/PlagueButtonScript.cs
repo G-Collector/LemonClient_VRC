@@ -117,12 +117,23 @@ namespace _LemonClient.PlagueButtons
                     var featureCat = exploitPage.AddButtonGroup("Features");
                     featureCat.AddToggleButton("Flight", "Turn flight on", "Turn flight off", value => { Exploits.FlightControl.EnableFlightMethod2(value); }).SetToggleState(false, true);
                     featureCat.AddToggleButton("Anti-theft", "Toggle on anti-theft", "(Probably) Toggle off anti-theft", value => { Exploits.GeneralExploits.BetterAntiTheft(value); }).SetToggleState(false, true);
+                    featureCat.AddSimpleSingleButton("Swap Avatar", "Swaps to avatar ID stored in Clipboard", () => ExtraDependencies.PlayerWrapper.ChangeAvatar(Clipboard.GetText()));
                     exploitPage.AddSlider("Flight Speed", "Speed of Flight", value => { Exploits.FlightControl.flightSpeed = value; }, 1, 100, 2, false, false);
                     
                     //World Functionality
                     var worldCat = exploitPage.AddButtonGroup("World Stuff");
                     worldCat.AddSimpleSingleButton("Join World", "Join Instance ID from Clipboard", () => ExtraDependencies.WorldWrapper.JoinWorld(Clipboard.GetText()));
                     worldCat.AddSimpleSingleButton("Copy World ID", "copies world ID to Clipboard", () => Clipboard.SetText(ExtraDependencies.WorldWrapper.GetJoinID()));
+
+
+                    //Selected User
+                    var userGroup = new CollapsibleButtonGroup(TransformHelper.SelectedUser_Local, "Selected User Functions");
+
+                    userGroup.AddSimpleSingleButton("Teleport", "Teleport to selected user", () => Features.SelUserFunctions.TeleportToPlayer(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()));
+                    userGroup.AddSimpleSingleButton("Force Clone", "Copies selected user's avatar", () => Features.SelUserFunctions.ForceClone(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()));
+                    userGroup.AddSimpleSingleButton("Copy Avi ID", "Copies selected user's avatar ID to clipboard", () => { Features.SelUserFunctions.CopyAvatarID(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()); });
+                    userGroup.AddSimpleSingleButton("Copy User ID", "Copies selected user's ID to clipboard", () => Features.SelUserFunctions.CopyUserID(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()));
+
                 };
             }
         }
