@@ -94,6 +94,7 @@ namespace _LemonClient.PlagueButtons
                     secondEXGroup.AddSimpleSingleButton("Gold Gun", "Enable Gold gun skin", () => Exploits.MurderExploits.GoldenGunForYou());
                     secondEXGroup.AddSimpleSingleButton("Clue ESP", "Shows clues through walls", () => MelonCoroutines.Start(Exploits.MurderExploits.ClueEsp()));
                     secondEXGroup.AddSimpleSingleButton("Respawn Pickups", "Respawns all pickups to world position", () => Exploits.MurderExploits.RespawnPickups());
+                    secondEXGroup.AddSimpleSingleButton("Force Grab", "Force grab on pickups", () => Exploits.MurderExploits.ForceGrab());
 
                     thirdEXGroup.AddSimpleSingleButton("Bring Revolver", "Brings revolver to player", () => Exploits.MurderExploits.BringRoleWeapon(1));
                     thirdEXGroup.AddSimpleSingleButton("Bring Luger", "Brings luger to player", () => Exploits.MurderExploits.BringClueWeapon(2));
@@ -124,6 +125,7 @@ namespace _LemonClient.PlagueButtons
                     var worldCat = exploitPage.AddButtonGroup("World Stuff");
                     worldCat.AddSimpleSingleButton("Join World", "Join Instance ID from Clipboard", () => ExtraDependencies.WorldWrapper.JoinWorld(Clipboard.GetText()));
                     worldCat.AddSimpleSingleButton("Copy World ID", "copies world ID to Clipboard", () => Clipboard.SetText(ExtraDependencies.WorldWrapper.GetJoinID()));
+                    //worldCat.AddSimpleSingleButton("Item ESP", "See VRC_Pickups through walls", () => Features.ESPHandler.ItemESP());
 
 
                     //Selected User
@@ -133,6 +135,7 @@ namespace _LemonClient.PlagueButtons
                     userGroup.AddSimpleSingleButton("Force Clone", "Copies selected user's avatar", () => Features.SelUserFunctions.ForceClone(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()));
                     userGroup.AddSimpleSingleButton("Copy Avi ID", "Copies selected user's avatar ID to clipboard", () => { Features.SelUserFunctions.CopyAvatarID(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()); });
                     userGroup.AddSimpleSingleButton("Copy User ID", "Copies selected user's ID to clipboard", () => Features.SelUserFunctions.CopyUserID(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer()));
+                    userGroup.AddSimpleSingleButton("Target Crash", "Crash target user using an Avatar", () => Exploits.TargetCrash.CrashSelected(ExtraDependencies.PlayerWrapper.GetVRCPlayer(PlagueButtonAPI.Misc.Utils.GetCurrentlySelectedPlayer())));
 
                 };
             }

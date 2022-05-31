@@ -419,9 +419,11 @@
     <Compile Include="Exploits\FlightControl.cs" />
     <Compile Include="Exploits\GeneralExploits.cs" />
     <Compile Include="Exploits\MurderExploits.cs" />
+    <Compile Include="Exploits\TargetCrash.cs" />
     <Compile Include="ExtraDependencies\PlayerWrapper.cs" />
     <Compile Include="ExtraDependencies\WorldWrapper.cs" />
     <Compile Include="ExtraDependencies\ZDR_Keybinds.cs" />
+    <Compile Include="Features\ESPHandler.cs" />
     <Compile Include="Features\HideSelf.cs" />
     <Compile Include="Features\SelUserFunctions.cs" />
     <Compile Include="Features\SwitchToAvatarID.cs" />
