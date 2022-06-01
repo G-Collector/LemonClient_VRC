@@ -25,6 +25,8 @@ namespace _LemonClient.PlagueButtons
 
         private Dictionary<string, Sprite> UserImages = new Dictionary<string, Sprite>();
         public static string MurdererName = "?????";
+        public static object infRevRoutine;
+        public static object mNameplateRoutine;
         public override void OnApplicationStart()
         {
             try
@@ -62,6 +64,7 @@ namespace _LemonClient.PlagueButtons
                     //Okay box: ButtonAPI.GetQuickMenuInstance().ShowOKDialog("Title", "Message", () => On click functionality);
                     //Confirm box: ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("Title", "Message", () => { Yes }, () => { No });
 
+                    //Initialization code for menu
                     var wingMenuOpen = MenuPage.CreatePage(WingSingleButton.Wing.Both, ButtonImage, "Lemon Client", "Lemon Client");
                     var exploitPage = wingMenuOpen.Item1;
 
@@ -72,10 +75,11 @@ namespace _LemonClient.PlagueButtons
                     var murderCat = exploitCat.AddSubMenu(ButtonImage, "Murder 4", "Murder 4");
                     var murderPage = murderCat.Item1;
 
-                    var firstEXGroup = murderPage.AddCollapsibleButtonGroup("Murder 4 Roles");
+                    var firstEXGroup = murderPage.AddButtonGroup("Murder 4 Actions");
                     var secondEXGroup = murderPage.AddCollapsibleButtonGroup("Cosmetic Changes");
-                    var thirdEXGroup = murderPage.AddButtonGroup("Bring Items");
+                    var thirdEXGroup = murderPage.AddCollapsibleButtonGroup("Bring Items");
 
+                    //Actions code
                     firstEXGroup.AddSimpleSingleButton("Murderer", "Sets self to Murderer in Murder 4", () => Exploits.MurderExploits.SelfMurderer());
                     firstEXGroup.AddSimpleSingleButton("Bystander", "Sets self to Bystander in Murder 4", () => Exploits.MurderExploits.SelfBystander());
                     firstEXGroup.AddSimpleSingleButton("Alert Murderer", "Sends alert containing Murderer name", () =>
@@ -89,13 +93,50 @@ namespace _LemonClient.PlagueButtons
                             yield break;
                         }
                     });
+                    firstEXGroup.AddSingleButton("Force Start", "Force Start the game", () => Exploits.MurderExploits.StartGame());
+                    firstEXGroup.AddSingleButton("Lights Off", "Lights off", () => Exploits.MurderExploits.LightsOFF());
+                    firstEXGroup.AddSingleButton("Lights On", "Lights on", () => Exploits.MurderExploits.LightsON());
+                    firstEXGroup.AddSingleButton("Abort Game", "Aborts gamemode", () => Exploits.MurderExploits.AbortGame());
 
+                    //Cosmetic Changes
                     secondEXGroup.AddToggleButton("Anti-blind", "Enable Anti-blind", "Disable anti-blind", value => { Exploits.MurderExploits.AntiBlind(value); }).SetToggleState(false, true);
-                    secondEXGroup.AddSimpleSingleButton("Gold Gun", "Enable Gold gun skin", () => Exploits.MurderExploits.GoldenGunForYou());
+                    secondEXGroup.AddToggleButton("Infinite Shots", "Infinite shots with the revolver", value => {
+                        if (value == true)
+                        {
+                            infRevRoutine = MelonCoroutines.Start(Exploits.MurderExploits.InfiniteRevolver());
+                            Exploits.MurderExploits.infRevolver = true;
+                        }
+                        else
+                        {
+                            if (Exploits.MurderExploits.infRevolver)
+                            {
+                                MelonCoroutines.Stop(infRevRoutine);
+                                Exploits.MurderExploits.infRevolver = false;
+                            }
+                        }
+                    }).SetToggleState(false, true);
+                    secondEXGroup.AddToggleButton("Murderer Nameplate", "Adds local nameplate to murderer", value => {
+                        if (value)
+                        {
+                            mNameplateRoutine = MelonCoroutines.Start(Exploits.MurderExploits.ShowMurdererOnNamePlate());
+                            Exploits.MurderExploits.murderNameplateBool = value;
+                        }
+                        else
+                        {
+                            if (Exploits.MurderExploits.murderNameplateBool == true)
+                            {
+                                MelonCoroutines.Stop(mNameplateRoutine);
+                                Exploits.MurderExploits.murderNameplateBool = value;
+                            }
+                        }
+                    }).SetToggleState(false, true);
+                    secondEXGroup.AddSimpleSingleButton("Gold Gun", "Enable Gold gun skin", () => MelonCoroutines.Start(Exploits.MurderExploits.GoldenGunForYou()));
+                    secondEXGroup.AddSingleButton("Laser Sight", "Adds local laser sight onto revolver", () => GameObject.Find("Game Logic/Weapons/Revolver/Recoil Anim/Recoil/Laser Sight").active = true);
                     secondEXGroup.AddSimpleSingleButton("Clue ESP", "Shows clues through walls", () => MelonCoroutines.Start(Exploits.MurderExploits.ClueEsp()));
                     secondEXGroup.AddSimpleSingleButton("Respawn Pickups", "Respawns all pickups to world position", () => Exploits.MurderExploits.RespawnPickups());
                     secondEXGroup.AddSimpleSingleButton("Force Grab", "Force grab on pickups", () => Exploits.MurderExploits.ForceGrab());
 
+                    //Bringing Items
                     thirdEXGroup.AddSimpleSingleButton("Bring Revolver", "Brings revolver to player", () => Exploits.MurderExploits.BringRoleWeapon(1));
                     thirdEXGroup.AddSimpleSingleButton("Bring Luger", "Brings luger to player", () => Exploits.MurderExploits.BringClueWeapon(2));
                     thirdEXGroup.AddSimpleSingleButton("Bring Shotgun", "Brings shotgun to player", () => Exploits.MurderExploits.BringClueWeapon(3));
@@ -108,6 +149,7 @@ namespace _LemonClient.PlagueButtons
                     var rCPage = rCCat.Item1;
                     var rCCont = rCPage.AddButtonGroup("Crash Ranks");
 
+                    //Rank Definitions
                     rCCont.AddSimpleSingleButton("Visitors", "Blocks everyone except for Visitor Users", () => MelonCoroutines.Start(Exploits.ByRankCrash.BoolCombined("(0.8, 0.8, 0.8)")));
                     rCCont.AddSimpleSingleButton("New Users", "Blocks everyone except for New Users", () => MelonCoroutines.Start(Exploits.ByRankCrash.BoolCombined("NewUser")));
                     rCCont.AddSimpleSingleButton("Users", "Blocks everyone except for Users", () => MelonCoroutines.Start(Exploits.ByRankCrash.BoolCombined("User")));
